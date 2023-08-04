@@ -1,5 +1,8 @@
-# External libraries
-add_subdirectory(${CMAKE_SOURCE_DIR}/deps)
+# Create a directory for headers and a header file to indicate, that this folder is for headers
+if (NOT EXISTS ${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME})
+	file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME})
+	file(WRITE ${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME}/core.h "#pragma once\n")
+endif()
 
 # Recurse to find all library files
 file(GLOB_RECURSE SOURCE_FILES
@@ -8,28 +11,46 @@ file(GLOB_RECURSE SOURCE_FILES
 file(GLOB_RECURSE HEADER_FILES
 	${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME}/*.h*
 )
-# Find app files
-file(GLOB_RECURSE APP_FILES
-	${CMAKE_SOURCE_DIR}/app/*.c*
-	${CMAKE_SOURCE_DIR}/app/*.h*
-)
 
 # Create library
 add_library(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
 
 # Create app
-add_executable(${CMAKE_PROJECT_NAME}_app ${APP_FILES})
-target_link_libraries(${CMAKE_PROJECT_NAME}_app ${CMAKE_PROJECT_NAME})
+if (EXISTS ${APP_DIRECTORY})
+	file(GLOB_RECURSE APP_FILES
+		${APP_DIRECTORY}/*.c*
+		${APP_DIRECTORY}/*.h*
+	)
+	add_executable(${APP_NAME} ${APP_FILES})
+	target_link_libraries(${APP_NAME} ${CMAKE_PROJECT_NAME})
+	target_include_directories(${APP_NAME} PUBLIC ${CMAKE_PROJECT_NAME})
+else()
+	message(STATUS "No executable will be created - APP_DIRECTORY \"" ${APP_DIRECTORY} "\" not found.")
+endif()
+
+# External libraries
+if(EXISTS ${DEPS_DIRECTORY})
+	add_subdirectory(${DEPS_DIRECTORY})
+else()
+	message(STATUS "Dependencies won't be added - DEPS_DIRECTORY \"" ${DEPS_DIRECTORY} "\" not found.")
+endif()
+
 
 # Tests
-set(TEST_DIRECTORY "test")
-if (ENABLE_TEST)
-	add_subdirectory(${CMAKE_SOURCE_DIR}/test)
-endif(ENABLE_TEST)
+if (NOT ENABLE_TEST)
+	message(STATUS "Tests won't be built - ENABLE_TEST == OFF")
+elseif (NOT EXISTS ${TEST_DIRECTORY})
+	message(STATUS "Tests won't be built - TEST_DIRECTORY \"" ${TEST_DIRECTORY} "\" not found.")
+else()
+	add_subdirectory(${TEST_DIRECTORY})
+endif()
 
 # Benchmarks
-set(BENCH_DIRECTORY "bench")
-if (ENABLE_BENCH)
-	add_subdirectory(${CMAKE_SOURCE_DIR}/bench)
-endif(ENABLE_BENCH)
+if (NOT ENABLE_BENCH)
+	message(STATUS "Benchmarks won't be built - ENABLE_BENCH == OFF")
+elseif (NOT EXISTS ${BENCH_DIRECTORY})
+	message(STATUS "Benchmarks won't be built - BENCH_DIRECTORY \"" ${BENCH_DIRECTORY} "\" not found.")
+else()
+	add_subdirectory(${BENCH_DIRECTORY})
+endif()
