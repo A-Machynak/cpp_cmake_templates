@@ -1,5 +1,5 @@
 # Cmake templates
-Cmake templates to get quickly started with you projects.
+Cmake templates to get quickly started.
 
 ## Types
 - `v1` - Uses a bit complicated structure - contains `src/` subdirectory in the root which contains an executable and several subdirectories, which are supposed to be built as libraries. Usage is discouraged.
