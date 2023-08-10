@@ -31,7 +31,7 @@ file(GLOB_RECURSE HEADER_FILES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
-target_link_libraries(${PROJECT_NAME} ${TOP_LIB} gtest gmock gtest_main)
+target_link_libraries(${PROJECT_NAME} ${TOP_LIB} GTest::gtest GTest::gmock GTest::gtest_main)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 include(GoogleTest)
