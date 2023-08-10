@@ -24,17 +24,15 @@ endif()
 
 # Recurse to find all test files
 file(GLOB_RECURSE SOURCE_FILES
-	*.cpp
-	*.c++
+	*.c*
 )
 file(GLOB_RECURSE HEADER_FILES
-	*.h
-	*.hpp
+	*.h*
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(${PROJECT_NAME} ${TOP_LIB} gtest gmock gtest_main)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

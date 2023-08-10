@@ -1,20 +1,21 @@
 # Create a directory for headers and a header file to indicate, that this folder is for headers
-if (NOT EXISTS ${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME})
-	file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME})
-	file(WRITE ${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME}/core.h "#pragma once\n")
+if (NOT EXISTS ${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME})
+	file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/include)
+	file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME})
+	file(WRITE ${CMAKE_SOURCE_DIR}/include/${PROJECT_NAME}/core.h "#pragma once\n")
 endif()
 
 # Recurse to find all library files
 file(GLOB_RECURSE SOURCE_FILES
-	${CMAKE_SOURCE_DIR}/src/dev/*.c* # library
+	${CMAKE_SOURCE_DIR}/dev/src/*.c* # library
 )
 file(GLOB_RECURSE HEADER_FILES
-	${CMAKE_SOURCE_DIR}/${CMAKE_PROJECT_NAME}/*.h*
+	${CMAKE_SOURCE_DIR}/include/*.h*
 )
 
 # Create library
-add_library(${CMAKE_PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR})
+add_library(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # Create app
 if (EXISTS ${APP_DIRECTORY})
@@ -23,8 +24,10 @@ if (EXISTS ${APP_DIRECTORY})
 		${APP_DIRECTORY}/*.h*
 	)
 	add_executable(${APP_NAME} ${APP_FILES})
-	target_link_libraries(${APP_NAME} ${CMAKE_PROJECT_NAME})
-	target_include_directories(${APP_NAME} PUBLIC ${CMAKE_PROJECT_NAME})
+	target_link_libraries(${APP_NAME} ${PROJECT_NAME})
+	target_include_directories(${APP_NAME}
+		PUBLIC ${CMAKE_SOURCE_DIR}/include
+		PRIVATE ${CMAKE_SOURCE_DIR}/app)
 else()
 	message(STATUS "No executable will be created - APP_DIRECTORY \"" ${APP_DIRECTORY} "\" not found.")
 endif()

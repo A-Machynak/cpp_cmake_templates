@@ -10,18 +10,27 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Googletest
 set(TEST_DIRECTORY ${CMAKE_SOURCE_DIR}/test)
-option(ENABLE_TEST "Build tests" ON)
+option(ENABLE_TEST "Build tests" OFF)
 
 # Google benchmarks
 set(BENCH_DIRECTORY ${CMAKE_SOURCE_DIR}/bench)
-option(ENABLE_BENCH "Build benchmarks" ON)
+option(ENABLE_BENCH "Build benchmarks" OFF)
 
 # App/executable directory
 set(APP_DIRECTORY ${CMAKE_SOURCE_DIR}/app)
 set(APP_NAME ${CMAKE_PROJECT_NAME}_app)
+option(ENABLE_APP "Build app" ON)
 
 # Dependencies' directory
 set(DEPS_DIRECTORY ${CMAKE_SOURCE_DIR}/deps)
+
+
+# Disable test/bench/app if we aren't being built by this project
+if(NOT ${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
+	set(ENABLE_TEST OFF)
+	set(ENABLE_BENCH OFF)
+	set(ENABLE_APP OFF)
+endif()
 
 # Initialize
 include(cmake/init.cmake)
