@@ -18,7 +18,11 @@ add_library(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 # Create app
-if (EXISTS ${APP_DIRECTORY})
+if(NOT ${ENABLE_APP})
+	message(STATUS "App won't be built - ENABLE_APP == OFF")
+elseif(NOT EXISTS ${APP_DIRECTORY})
+	message(STATUS "No executable will be created - APP_DIRECTORY \"" ${APP_DIRECTORY} "\" not found.")
+else()
 	file(GLOB_RECURSE APP_FILES
 		${APP_DIRECTORY}/*.c*
 		${APP_DIRECTORY}/*.h*
@@ -28,8 +32,6 @@ if (EXISTS ${APP_DIRECTORY})
 	target_include_directories(${APP_NAME}
 		PUBLIC ${CMAKE_SOURCE_DIR}/include
 		PRIVATE ${CMAKE_SOURCE_DIR}/app)
-else()
-	message(STATUS "No executable will be created - APP_DIRECTORY \"" ${APP_DIRECTORY} "\" not found.")
 endif()
 
 # External libraries
@@ -39,20 +41,19 @@ else()
 	message(STATUS "Dependencies won't be added - DEPS_DIRECTORY \"" ${DEPS_DIRECTORY} "\" not found.")
 endif()
 
-
 # Tests
-if (NOT ENABLE_TEST)
+if(NOT ENABLE_TEST)
 	message(STATUS "Tests won't be built - ENABLE_TEST == OFF")
-elseif (NOT EXISTS ${TEST_DIRECTORY})
+elseif(NOT EXISTS ${TEST_DIRECTORY})
 	message(STATUS "Tests won't be built - TEST_DIRECTORY \"" ${TEST_DIRECTORY} "\" not found.")
 else()
 	add_subdirectory(${TEST_DIRECTORY})
 endif()
 
 # Benchmarks
-if (NOT ENABLE_BENCH)
+if(NOT ENABLE_BENCH)
 	message(STATUS "Benchmarks won't be built - ENABLE_BENCH == OFF")
-elseif (NOT EXISTS ${BENCH_DIRECTORY})
+elseif(NOT EXISTS ${BENCH_DIRECTORY})
 	message(STATUS "Benchmarks won't be built - BENCH_DIRECTORY \"" ${BENCH_DIRECTORY} "\" not found.")
 else()
 	add_subdirectory(${BENCH_DIRECTORY})
