@@ -1,5 +1,1 @@
-#include "my_project/core.h"
-
-int fn() {
-	return 1;
-}
+//#include "my_project/core.h"
