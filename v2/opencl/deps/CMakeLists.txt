@@ -15,3 +15,26 @@ foreach(DIR ${CHILD_DIRECTORIES})
 		#target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${DIR})
 	endif()
 endforeach()
+
+include(FetchContent)
+FetchContent_Declare(
+	OpenCL-CLHPP
+	GIT_REPOSITORY https://github.com/KhronosGroup/OpenCL-CLHPP
+	GIT_TAG origin/main
+)
+FetchContent_Declare(
+	OpenCL-ICD-Loader
+	GIT_REPOSITORY https://github.com/KhronosGroup/OpenCL-ICD-Loader
+	GIT_TAG origin/main
+)
+FetchContent_Declare(
+	OpenCL-Headers
+	GIT_REPOSITORY https://github.com/KhronosGroup/OpenCL-Headers
+	GIT_TAG origin/main
+)
+
+FetchContent_MakeAvailable(
+	OpenCL-Headers
+	OpenCL-ICD-Loader
+	OpenCL-CLHPP
+)

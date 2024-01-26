@@ -34,3 +34,5 @@ endif()
 
 # Initialize
 include(cmake/init.cmake)
+
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC OpenCL::Headers OpenCL::OpenCL OpenCL::HeadersCpp)
