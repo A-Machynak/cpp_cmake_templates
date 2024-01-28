@@ -1,8 +1,30 @@
 # Cmake templates
 Cmake templates to get quickly started.
 
-## Types
-- `v1` - Uses a bit complicated structure - contains `src/` subdirectory in the root which contains an executable and several subdirectories, which are supposed to be built as libraries. Usage is discouraged.
-- `v2` - A bit more simple and convenient - directories `dev/src/` and `your_project_name/` contain source and header files respectively, which are built as a library. An `app/` directory (if it exists) contains source files which are built as an executable that links with `your_project_name`. Benchmarks, tests and dependency folders can be disabled/deleted if not needed.
+## Standard
+Builds a library and an executable.
+[googletest](https://github.com/google/googletest) and [googlebench](https://github.com/google/benchmark/) can be enabled (uses find_package; FetchContent if not found).
+Doxyfile for the sake of generating documentation of the library is included.
 
-Templates use [googletest](https://github.com/google/googletest) and [google benchmark](https://github.com/google/benchmark/) for tests and benchmarks respectively.
+- `app/` - `main()` and other files for the executable (`project_name_app` application)
+- `deps/` - external libraries
+- `dev/src/*` - library implementation (`project_name` library)
+- `dev/doc/*` - documentation
+- `include/project_name/*` - library header files (`project_name` library)
+- `test/src` - tests
+- `bench/src` - benchmarks
+
+`project_name` is built as a library. Executables built in `app`, `test` and `bench` link with this library. Refer to the `standard/README.md` for more info.
+
+Alias (`.bashrc`):
+```sh
+alias cpp_template='cp -r /path/to/cpp_cmake_templates/standard/* .'
+```
+
+## Specific
+Other templates based on `standard`.
+
+- `opencl` - OpenCL template. Uses FetchContent to download dependencies:
+	- [OpenCL-CLHPP](https://github.com/KhronosGroup/OpenCL-CLHPP)
+	- [OpenCL-ICD-Loader](https://github.com/KhronosGroup/OpenCL-ICD-Loader)
+	- [OpenCL-Headers](https://github.com/KhronosGroup/OpenCL-Headers)
